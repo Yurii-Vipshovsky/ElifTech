@@ -1,38 +1,97 @@
-﻿@model BankWEB.Models.Mortgage
+﻿
+@model BankWEB.Models.Mortgage
 @{
     ViewData["Title"] = "Mortgage calculator";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{
+
+    IEnumerable<BankModel> Banks = ViewData["Banks"] as IEnumerable<BankModel>;
+}
 <h1>Mortgage calculator</h1>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Calculate">
-            @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
-            <div class="form-group">
-                <label asp-for="InitialLoan" class="control-label"></label>
-                <input asp-for="InitialLoan" class="form-control" />
-                <span asp-validation-for="InitialLoan" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DownPayment" class="control-label"></label>
-                <input asp-for="DownPayment" class="form-control" />
-                <span asp-validation-for="DownPayment" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NumberOfPayments" class="control-label"></label>
-                <input asp-for="NumberOfPayments" class="form-control" />
-                <span asp-validation-for="NumberOfPayments" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BankId" class="control-label"></label>
-                <input asp-for="BankId" class="form-control" />
-                <span asp-validation-for="BankId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Calculate" class="btn btn-primary" />
-            </div>
-        </form>
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Calculate">
+                <div class="form-group">
+                    <label asp-for="InitialLoan" class="control-label">Initial Loan</label>
+                    <input asp-for="InitialLoan" class="form-control" placeholder="@Model.InitialLoan" />
+                    <span asp-validation-for="InitialLoan" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DownPayment" class="control-label">Down Payment</label>
+                    <input asp-for="DownPayment" class="form-control" placeholder="@Model.DownPayment" />
+                    <span asp-validation-for="DownPayment" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NumberOfPayments" class="control-label">Number Of Payments</label>
+                    <input asp-for="NumberOfPayments" class="form-control" placeholder="@Model.NumberOfPayments" />
+                    <span asp-validation-for="NumberOfPayments" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BankId" class="control-label">Bank</label>
+                    @*<input asp-for="BankId" class="form-control" placeholder="@Model.BankId" />*@
+                    <select asp-for="BankId" class="custom-select">
+                        @foreach (BankModel b in Banks)
+                        {
+                            <option value="@b.Id">@b.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="BankId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Calculate" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+    if (ViewBag.Eror == null)
+    {
+        <h1>Monthly Payment = @Model.MonthlyPayment</h1>
+    }
+    else
+    {
+        <h1 style="color:red">@ViewBag.Eror</h1>
+    }
+
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Calculate">
+                <div class="form-group">
+                    <label asp-for="InitialLoan" class="control-label">Initial Loan</label>
+                    <input asp-for="InitialLoan" class="form-control" />
+                    <span asp-validation-for="InitialLoan" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DownPayment" class="control-label">Down Payment</label>
+                    <input asp-for="DownPayment" class="form-control" />
+                    <span asp-validation-for="DownPayment" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NumberOfPayments" class="control-label">Number Of Payments</label>
+                    <input asp-for="NumberOfPayments" class="form-control" />
+                    <span asp-validation-for="NumberOfPayments" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BankId" class="control-label">Bank</label>
+                    <select asp-for="BankId" class="custom-select">
+                        @foreach (BankModel b in Banks)
+                        {
+                            <option value="@b.Id">@b.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="BankId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Calculate" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+}

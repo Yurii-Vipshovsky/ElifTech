@@ -9,7 +9,8 @@ namespace BankWEB.Models
     {
         public double InitialLoan { get; set; }
         public double DownPayment { get; set; }
-        public int NumberOfPayments { get; set; }
+        public uint NumberOfPayments { get; set; }
         public int BankId { get; set; }
+        public double MonthlyPayment { get; set; }
     }
 }

@@ -157,17 +157,33 @@ namespace BankWEB.Controllers
         [HttpGet]
         public IActionResult Calculate()
         {
+
+            ViewData["Banks"] = _context.BankModel.Where(d => d.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value).ToList();
             return View();
         }
         
         [HttpPost]
         [ValidateAntiForgeryToken]
         
-        public async Task<IActionResult> Calculate([Bind("InitialLoan,NumberOfPayments,BankId")] Mortgage mortgage)
+        public async Task<IActionResult> Calculate([Bind("InitialLoan,DownPayment,NumberOfPayments,BankId")] Mortgage mortgage)
         {
-            BankModel bank = _context.BankModel.Find(mortgage.BankId);
-            double M = (mortgage.InitialLoan * (bank.InterestRate / 12) * Math.Pow(1 + bank.InterestRate / 12, mortgage.NumberOfPayments)) / (Math.Pow(1 + bank.InterestRate / 12, mortgage.NumberOfPayments) - 1);
-            return Content(M.ToString());
+            ViewData["Banks"] = await _context.BankModel.Where(d => d.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value).ToListAsync();
+            BankModel bank = await _context.BankModel.FindAsync(mortgage.BankId);
+            if (bank.MaximumLoan < mortgage.InitialLoan)
+            {
+                ViewBag.Eror = "Maximum Loan of " +bank.Name+ " is less";
+            }
+            if (bank.LoanTerm < mortgage.NumberOfPayments)
+            {
+                ViewBag.Eror = "Loan Term of " + bank.Name + " is less";
+
+            }
+            if (bank.MinimumDownPayment > mortgage.DownPayment)
+            {
+                ViewBag.Eror = "Minimum Down Payment of " + bank.Name + " is bigger";
+            }
+            mortgage.MonthlyPayment = ((mortgage.InitialLoan-mortgage.DownPayment) * (bank.InterestRate / 1200) * Math.Pow(1 + bank.InterestRate / 1200, mortgage.NumberOfPayments)) / (Math.Pow(1 + bank.InterestRate / 1200, mortgage.NumberOfPayments) - 1);
+            return View(mortgage);
         }
         private bool BankModelExists(int id)
         {
