@@ -1,14 +1,16 @@
 ﻿@model IEnumerable<BankWEB.Models.BankModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Banks";
 }
 
-<h1>Index</h1>
-
+<h1>Banks</h1>
+<div>
+    <a style="font-size:32px;" asp-action="Calculate">Calculate</a>
+</div>
 <p>
-    <a asp-action="Create">Create New</a>
-    <a asp-action="Calculate">Calculate</a>
+    <a asp-action="Create">Create New Bank</a>
+    
 </p>
 <table class="table">
     <thead>

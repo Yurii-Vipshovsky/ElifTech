@@ -69,3 +69,21 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+.login-register {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+}
+
+.login-register > .row {
+        display: block;
+        margin-right: 0px;
+        margin-left: 0px;
+}
+
+.login-register > .row > .col-md-4 {
+    max-width:100%;
+}
